@@ -1,0 +1,54 @@
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		function addToChatContent(msg) {
+		  	var element = document.getElementById('chatContent')
+		  	element.innerHTML = element.innerHTML + "<br/>" + msg;
+		}
+
+	  var socket = io.connect('http://10.56.20.38:9000');
+	  socket.on('intro', function (data) {
+	    addToChatContent(">>" + data.msg);
+	  });
+
+	  socket.on('msg', function(data) {
+	  	addToChatContent(data.msg);
+	  });
+
+	  socket.on('cardMoved', function(data) {
+	  	console.log("Received cardMoved: " + data.top + ":" + data.left)
+	  	$("#draggable").css({top: data.top, left: data.left, position:'absolute'});
+	  })
+
+	  function send() {
+	  	var msg = document.getElementById('message').value
+	  	socket.emit('msg', {msg: msg})
+	  	return false;
+	  }
+	  
+	  $(function() {
+    	$( "#draggable" ).draggable({
+    		 containment: "parent",
+    		 stop: function( event, ui ) {
+    		 	socket.emit('cardMoved', {top: ui.position.top, left: ui.position.left});
+    		 }
+
+    		});
+    	});
+	</script>
+</head>
+<body>
+	<div style="background-color:lightgreen;display:block;min-height:200px;overflow:hidden">
+		<div style="border:solid;overflow:hidden;background-size: 100px 100px;min-height:100px;width:100px;background-image:url(http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=290526&type=card);background-repeat:no-repeat" id="draggable"></div>
+	</div>
+	
+	<input id="message" type="text" />
+	<input value="Send" type="button" onClick="javascript:send()" />
+	<div id="chatContent">
+	</div>
+
+</body>
+</html>
