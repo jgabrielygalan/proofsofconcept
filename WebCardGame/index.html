@@ -1,24 +1,57 @@
 <html>
 <head>
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<script src="/js/jquery-1.9.1.js"></script>
+  	<script src="/js/jquery-ui.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="/js/main.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="/css/main.css" />
 </head>
 <body>
-	<div id="mats">
+	<script type="text/x-handlebars" data-template-name="my-hand">
+		<div id="hand">
+		{{#each controller}}
+			<div class='card handCard'>
+				<img class='handCard' {{bindAttr src="url"}}/>
+    		</div>
+		{{/each}}
+
+		</div>
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="opponent-battlefield">
 		<div class="playerMat">
 			<div id="card1" class="card"></div>
 		</div>
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="my-battlefield">
+		<div id="myBattlefield" class="playerMat">
+			<div id="card2" class="card draggable"></div>
+		</div>
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="library">
+	</script>
+
+
+	<script type="text/x-handlebars" data-template-name="application">
+	<div id="mats">
 		<div id="myBattlefield" class="playerMat">
 			<div id="card2" class="card draggable"></div>
 		</div>
 		<div id="cardsArea">
-			<div id="hand"></div>
+			<div id="hand">
+			{{#each card}}
+				<div class='card handCard'>
+					<img class='handCard' {{bindAttr src="url"}}/>
+	    		</div>
+			{{/each}}
+
+			</div>
 			<div id="graveyard"></div>
-			<div id="library"></div>
+			{{#view App.LibraryView}}
+				<div id="library"></div>
+			{{/view}}
 		</div>
 	</div>
 	<div id="info">	
@@ -30,5 +63,12 @@
 			</div>
 		</div>
 	</div>
+	</script>
+
+
+	<script src="/js/handlebars.js"></script>
+	<script src="/js/ember-1.0.0-rc.3.js"></script>
+	<script src="/js/ember-data.js"></script>
+	<script src="/js/app.js"></script>
 </body>
 </html>
